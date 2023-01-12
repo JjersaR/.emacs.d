@@ -1,0 +1,17 @@
+.cache/
+.dap-breakpoints
+.lsp-session-v*
+auto-save-list/
+copia-init-straight
+eln-cache/
+elpa/
+eshell/
+places
+projectile-bookmarks.eld
+recentf
+share/
+snippets/
+transient/
+workspace/
+eclipse.jdt.ls/
+forge-database.sqlite

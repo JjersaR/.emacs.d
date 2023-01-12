@@ -1,0 +1,617 @@
+#+TITLE: Configuracion
+
+* Configuracion Base
+
+#+begin_src emacs-lisp :tangle ./init.el
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;
+  ;; Configuracion base
+  ;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  ;; informacion personal
+  (setq user-full-name "Ricardo"
+  user-login-name "r"
+  user-real-login-name "JjersaR"
+  user-mail-address "rikisj5649@gmail.com")
+
+  ;; Iniciar el servidor
+  (require 'server)
+  (unless (server-running-p)
+    (server-start))
+
+  ;; De yes y no a y - n
+  (fset 'yes-or-no-p 'y-or-n-p)
+
+  ;; brillo
+  (set-frame-parameter nil 'alpha 95)
+
+  ;; quitar *.el~ y bloqueo de archivos
+  (setq backup-inhibited t
+  create-lockfiles nil)
+
+  ;; Recargar archivos
+  (global-auto-revert-mode 1)
+  (setq global-auto-revert-non-file-buffers t)
+
+  ;;Cambiar mensaje y mas suave el bajar
+  (setq initial-scratch-message "Holis"
+  inhibit-startup-message t
+  mouse-wheel-progressive-speed nil)
+
+  ;; minimalismo
+  (tool-bar-mode -1) ; Desactivar barra de herramientas
+  (menu-bar-mode -1) ; Desactivar barra de menu
+  (scroll-bar-mode -1) ; Desactivar scroll
+  (setq large-file-warning-threshold nil ; No advertir archivos grandes
+  ad-redefinition-action 'accept) ; Consejos para funciones
+  (recentf-mode 1) ; Activar historial de archivos recientes
+  (save-place-mode 1) ; recordar donde esta el puntero
+  (setq use-dialog-box nil) ; enfocarse en el teclado
+  (setq-default default-directory "~/") ; para que dired empiece en home
+
+  ;; numeros relativos
+  (setq-default display-line-numbers-type 'relative)
+  (dolist (mode '(org-mode-hook
+      term-mode-hook
+      shell-mode-hook
+      eshell-mode-hook))
+    (add-hook mode (lambda () (display-line-numbers-mode 0))))
+
+  ;; mover archivos eliminados a la basura
+  (setq-default delete-by-moving-to-trash t
+    ;; elimine archivos de copia
+    delete-old-versions t
+    ;;sangria
+    tab-width 2
+    indent-tabs-mode nil
+    ;; borrar buffer de dired si se abre otro
+    dired-kill-when-opening-new-dired-buffer t)
+
+  ;; configuracion de dired
+  (setq dired-listing-switches "-agho --group-directories-first")
+  (setq dired-dwim-target t)
+
+  ;; recolectar basura
+  (add-function :after after-focus-change-function (lambda () (unless (frame-focus-state) (save-some-buffers t))))
+
+  ;; eliminar espacios en blanco
+  (add-hook 'before-save-hook 'delete-trailing-whitespace)
+
+#+end_src
+
+* Repositorios
+
+#+begin_src emacs-lisp :tangle ./init.el
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;
+  ;; Repositorios
+  ;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  (require 'package)
+  (setq package-archives
+    '(("melpa" . "https://melpa.org/packages/")
+      ("melpa-stable" . "https://stable.melpa.org/packages/")
+      ("org" . "https://orgmode.org/elpa/")
+      ("gnu"   . "https://elpa.gnu.org/packages/")))
+
+  ;; BOOTSTRAP USE-PACKAGE
+  (unless (package-installed-p 'use-package)
+    (package-refresh-contents) ; update archives
+    (package-install 'use-package)) ; grab the newest use-package
+  (eval-and-compile
+    (require 'use-package)
+    (require 'bind-key)
+    (setq warning-minimum-level :emergency)) ; :error (default is :warning)
+
+  ;; actualizar los paquetes
+  (use-package auto-package-update)
+  (setq auto-package-update-interval 3) ; actualizar c/3 dias
+  (setq auto-package-update-prompt-before-update t) ; preguntar antes de actualizar
+  (setq auto-package-update-show-preview t) ; paquetes a actualizar
+  (setq auto-package-update-delete-old-versions t) ; eliminar versiones anteriores
+
+#+end_src
+
+* Cargar Paquetes
+
+#+begin_src emacs-lisp :tangle ./init.el
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;
+  ;; Cargar Configuracion
+  ;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  ;; cargar todos los .el en lisp
+  (defun load-directory (dir)
+    (let ((load-it (lambda (f)
+		     (load-file (concat (file-name-as-directory dir) f)))))
+      (mapc load-it (directory-files dir nil "\\.el$"))))
+
+  (load-directory "~/.emacs.d/lisp") ; cargar la configuracion de...
+
+#+end_src
+
+* Tangle
+#+begin_src emacs-lisp :tangle ./lisp/tangle.el
+
+  (use-package org-auto-tangle
+      :defer t)
+  (add-hook 'org-mode-hook 'org-auto-tangle-mode)
+
+#+end_src
+
+* Tema
+
+#+begin_src emacs-lisp :tangle ./lisp/tema.el
+
+  (use-package catppuccin-theme :config (load-theme 'catppuccin-mocha t))
+  (use-package autothemer :straight t)
+
+#+end_src
+
+* Nvim
+
+#+begin_src emacs-lisp :tangle ./lisp/tema.el
+
+  (setq evil-want-keybinding nil)
+
+  (use-package undo-fu)
+
+  (use-package evil
+    :demand t
+    :bind (("<escape>" . keyboard-escape-quit))
+    :init
+    (setq evil-want-keybinding nil)
+    (setq evil-want-C-u-scroll t)
+    (setq evil-want-C-d-scroll t)
+    (setq evil-want-C-i-jump nil)
+    (setq evil-undo-system 'undo-fu)
+    :config
+    (evil-mode 1))
+
+  (use-package evil-collection
+    :after evil
+    :config
+    (setq evil-want-integration t)
+    (evil-collection-init))
+
+#+end_src
+
+* Crux
+
+#+begin_src emacs-lisp :tangle ./lisp/crux.el
+
+  (use-package crux)
+  ;; C-c f -> Abrir archivo visitado recientemente.
+  ;; C-c D -> Eliminar archivo actual y búfer.
+  ;; C-c c -> Copie el archivo actual con los atributos del archivo conservados
+  ;; C-c k -> Cerrar todos los buffers menos en el que estas.
+  ;; M-o -> Seleccione otra ventana o cambie al búfer más reciente si solo hay una ventana.
+
+#+end_src
+
+* Which Key
+
+#+begin_src emacs-lisp :tangle ./lisp/tema.el
+
+  (use-package which-key
+    :init(which-key-mode)
+    :diminish which-key-mode
+    :config
+    (setq which-key-idle-delay 0.0))
+
+#+end_src
+
+* Ivy
+
+#+begin_src emacs-lisp :tangle ./lisp/ivy.el
+
+  (use-package ivy
+    :straight t
+    :diminish
+    :bind(("C-s" . swiper)
+    :map ivy-minibuffer-map
+    ("TAB" . ivy-alt-done)
+    ("C-l" . ivy-alt-done)
+    ("C-j" . ivy-next-line)
+    ("C-k" . ivy-previous-line)
+    :map ivy-switch-buffer-map
+    ("C-k" . ivy-previous-line)
+    ("C-l" . ivy-done)
+    ("C-d" . ivy-switch-buffer-kill)
+    :map ivy-reverse-i-search-map
+    ("C-k" . ivy-previous-line)
+    ("C-d" . ivy-reverse-i-search-kill))
+    :config
+    (ivy-mode 1))
+
+  (use-package counsel
+         :after ivy
+         :config (counsel-mode))
+
+  (use-package ivy-rich
+    :after ivy
+    :custom
+    (ivy-virtual-abbreviate 'full
+          ivy-rich-switch-buffer-align-virtual-buffer t
+          ivy-rich-path-style 'abbrev)
+    (ivy-rich-mode 1))
+
+#+end_src
+
+* Ayuda
+
+#+begin_src emacs-lisp :tangle ./lisp/ayuda.el
+
+  (use-package helpful)
+  (global-set-key (kbd "C-h f") #'helpful-callable)
+  (global-set-key (kbd "C-h v") #'helpful-variable)
+  (global-set-key (kbd "C-h k") #'helpful-key)
+  (global-set-key (kbd "C-c C-d") #'helpful-at-point)
+  (global-set-key (kbd "C-h F") #'helpful-function)
+  (global-set-key (kbd "C-h C") #'helpful-command)
+
+#+end_src
+
+* Buffer
+
+#+begin_src emacs-lisp :tangle ./lisp/buffer.el
+
+  (use-package ibuffer-vc
+    :bind ("C-x C-b" . ibuffer)
+    :delight)
+
+  (setq ibuffer-saved-filter-groups
+	      (quote (("default"
+			     ("dired" (mode . dired-mode))
+			     ("org" (name . "^.*org$"))
+			     ("web" (or (mode . web-mode) (mode . js2-mode)))
+			     ("shell" (or (mode . eshell-mode) (mode . shell-mode)))
+			     ("mu4e" (name . "\*mu4e\*"))
+			     ("programming" (or
+							(mode . python-mode)
+							(mode . c++-mode)
+							(mode . java-mode)))
+		 ("emacs" (or
+					    (name . "^\\*scratch\\*$")
+					    (name . "^\\*Messages\\*$")))))))
+
+  (add-hook 'ibuffer-mode-hook
+		  (lambda ()
+		    (ibuffer-auto-mode 1)
+		    (ibuffer-switch-to-saved-filter-groups "default")))
+
+  ;; Don't show filter groups if there are no buffers in that group
+  (setq ibuffer-show-empty-filter-groups nil)
+  ;; Don't ask for confirmation to delete marked buffers
+  (setq ibuffer-expert t)
+  (setq ibuffer-default-sorting-mode 'recency)
+
+#+end_src
+
+* General
+
+#+begin_src emacs-lisp :tangle ./lisp/general.el
+
+  ;; aqui puedes definir atajos de teclado
+  (use-package general
+    :config
+    (general-evil-setup t))
+
+  (general-define-key
+  ;; apartado de Crux
+  :prefix "C-c c"
+  "f" 'crux-recentf-find-file
+  "D" 'crux-delete-file-and-buffer
+  "c" 'crux-copy-file-preserve-attributes
+  "k" 'crux-kill-other-buffers
+  "o" 'crux-other-window-or-switch-buffer
+  "t" 'crux-visit-term-buffer)
+
+  (general-define-key
+  ;; apartado de lsp
+  :prefix "C-c l"
+  "a" 'lsp-ui-sideline-apply-code-actions
+  "f" 'lsp-format-buffer
+  "d" 'lsp-find-declaration
+  "D" 'lsp-ui-peek-find-definitions
+  "k" 'lsp-find-type-definition
+  "I" 'lsp-goto-implementation
+  "o" 'lsp-describe-thing-at-point
+  "u" 'lsp-update-servers
+  "w" 'lsp-workspace-folders-add
+  "W" 'lsp-workspace-folders-remove
+  "R" 'lsp-find-references
+  "r" 'lsp-rename)
+
+  (general-define-key
+  ;; apartado de lsp java
+  :prefix "C-c l j"
+  "p" 'lsp-java-build-project
+  "u" 'lsp-java-update-project-configuration
+  "n" 'lsp-java-create-field
+  "o" 'lsp-java-organize-imports
+  "O" 'lsp-java-generate-overrides
+  "a" 'lsp-java-generate-getters-and-setters
+  "h" 'lsp-java-generate-equals-and-hash-code
+  "t" 'lsp-java-generate-to-string
+  "i" 'lsp-java-add-import
+  "I" 'lsp-java-organize-imports
+  "s" 'lsp-java-open-super-implementation
+  "c" 'lsp-java-extract-to-constant
+  "M" 'lsp-java-extract-method
+  "v" 'lsp-java-extract-to-local-variable)
+
+#+end_src
+
+* Git
+
+#+begin_src emacs-lisp :tangle ./lisp/git.el
+
+  (use-package magit
+    :commands(magit-status magit-get-current-branch)
+    :custom
+    (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
+
+  (use-package forge)
+
+#+end_src
+
+* Icons
+
+#+begin_src emacs-lisp :tangle ./lisp/icons.el
+
+  (use-package all-the-icons)
+  (use-package all-the-icons-dired)
+
+#+end_src
+
+* Modeline
+
+#+begin_src emacs-lisp :tangle ./lisp/modeline.el
+
+  (use-package doom-modeline
+    :straight t
+    :custom (doom-modeline-height 15))
+  (doom-modeline-mode 1)
+
+#+end_src
+
+* Codigo
+
+#+begin_src emacs-lisp :tangle ./lisp/codigo.el
+
+  ;; autocompletar llaves
+  (use-package phi-autopair
+    :ensure t
+    :config (phi-autopair-global-mode))
+
+  ;; autocompletado
+  (use-package company
+    :defer t
+    :bind (:map company-active-map
+    ("<tab>" . company-complete-selection))
+    :config (setq company-idle-delay 0.0 ; quitar delay
+      company-echo-delay 0 ; eliminar parpadeo
+      company-dabbrev-minimum-length 1 ; iniciar despues de escribir
+      company-tooltip-align-annotations t ;alinea la anotación al lado derecho
+      company-dabbrev-downcase nil)
+    :hook (prog-mode-hook . company-mode-hook)
+    :custom
+    (company-minimum-prefix-lenght 1))
+  (add-hook 'after-init-hook 'global-company-mode)
+
+  ;; una caja bonita
+  (use-package company-box
+    :hook (company-mode . company-box-mode))
+
+  ;; sino es proyecto usar este
+  (use-package quickrun
+    :ensure t
+    :bind ("C-c r" . quickrun))
+
+  ;; para sintaxis
+  (use-package flycheck
+    :diminish
+    :hook ((flycheck-mode . flymake-mode-off))
+    :config (global-flycheck-mode))
+
+  ;; snippets
+  (use-package yasnippet :config (yas-global-mode))
+  (use-package yasnippet-snippets :ensure t)
+
+  ;; comentarios
+  (use-package evil-nerd-commenter
+    :bind ("C-M-/" . evilnc-comment-or-uncomment-lines))
+
+#+end_src
+
+* LSP
+
+#+begin_src emacs-lisp :tangle ./lisp/lsp.el
+
+  (use-package lsp-mode
+    :ensure t
+    :custom (lsp-auto-guess-root t)
+            (lsp-keep-workspace-alive nil)
+            (lsp-enable-snippet t)
+            (lsp-auto-execute-action nil)
+            (lsp-eldoce-render-all nil)
+            (lsp-enable-completion-at-point t)
+            (lsp-enable-xref t)
+            (lsp-diagnostics-provider :flycheck)
+            (lsp-enable-indentation t)
+            (lsp-before-save-edits nil)
+            (lsp-enable-imenu t)
+            (lsp-signature-render-documentation nil)
+            (lsp-completion-provider :company)
+            (lsp-keymap-prefix "C-c l")
+    :hook ((java-mode python-mode c++-mode) . lsp-deferred)
+  )
+
+  (use-package lsp-ui
+    :after lsp-mode
+    :diminish
+    :custom
+    ;; Sideline
+    (lsp-ui-sideline-show-diagnostics t)
+    (lsp-ui-sideline-show-hover nil)
+    (lsp-ui-sideline-show-code-actions nil)
+    (lsp-ui-sideline-update-mode 'line)
+    (lsp-ui-sideline-delay 0)
+    ;; Peek
+    (lsp-ui-peek-enable t)
+    (lsp-ui-peek-show-directory nil)
+    ;; Documentation
+    (lsp-ui-doc-enable t)
+    (lsp-ui-doc-position 'at-point)
+    (lsp-ui-doc-delay 0.2)
+    ;;IMenu
+    (lsp-ui-imenu-window-width 0)
+    (lsp-ui-imenu--custom-mode-line-format nil)
+    :hook (lsp-mode . lsp-ui-mode)
+  )
+
+  (use-package lsp-treemacs
+    :ensure t
+    :commands (lsp-treemacs-errors-list)
+    (lsp-treemacs-sync-mode 1))
+
+  (use-package treemacs-evil)
+
+  (use-package lsp-ivy
+    :requires (ivy)
+    :ensure t
+    :commands (lsp-ivy-workspace-symbol lsp-ivy-global-workspace-symbol))
+
+#+end_src
+
+** Java
+
+#+begin_src emacs-lisp :tangle ./lisp/java.el
+  ;; para comandos
+  (use-package eglot-java)
+
+  ;; para servidor
+  (use-package lsp-java
+    :defer t
+    :after lsp-mode
+  )
+#+end_src
+
+** C++
+
+#+begin_src emacs-lisp :tangle ./lisp/cpp.el
+
+  (use-package modern-cpp-font-lock
+    :ensure t)
+  (add-hook 'c++-mode-hook #'modern-c++-font-lock-mode)
+
+  (use-package meson-mode)
+  (add-hook 'meson-mode-hook 'company-mode)
+
+#+end_src
+
+** Python
+
+#+begin_src emacs-lisp :tangle ./lisp/python.el
+
+  (use-package lsp-pyright
+    :hook (python-mode . (lambda () (require 'lsp-pyright)))
+    :init (when (executable-find "python3")
+            (setq lsp-pyright-python-executable-cmd "python3")))
+
+  (use-package poetry :ensure t :after lsp-pyright)
+
+#+end_src
+
+* Org
+
+#+begin_src emacs-lisp :tangle ./lisp/org.el
+
+  (use-package org
+    :straight org-plus-contrib
+    :delight "100"
+    :config (setq org-ellipsis " ▾"
+		  org-hide-emphasis-markets t))
+
+  (use-package org-modern
+    :after org
+    :hook (org-mode . org-modern-mode)
+    (global-org-modern-mode))
+
+  (defun org-mode-visual-fill ()
+    (setq visual-fill-column-width 100
+	  visual-fill-column-center-text t)
+    (visual-fill-column-mode 1))
+
+  (use-package visual-fill-column
+    :hook (org-mode . org-mode-visual-fill))
+
+  ;; para presentaciones
+  (use-package ox-reveal
+    :straight t)
+
+  ;; Lenguajes en org-babel
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+	   (python . t)
+	   (java . t)))
+
+#+end_src
+
+* Parejas
+
+#+begin_src emacs-lisp :tangle ./lisp/parejas.el
+
+  (use-package rainbow-delimiters
+    :config (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
+    :delight)
+
+#+end_src
+
+* Projectile
+
+#+begin_src emacs-lisp :tangle ./lisp/parejas.el
+
+  (use-package projectile
+    :diminish projectile-mode
+    :config ((projectile-mode)
+	     (setq projectile-completion-system 'ivy
+		   projectile-globally-ignored-file-suffixes '(".elc" ".class" ".pyc" ".o")
+		   projectile-require-project-root nil
+		   projectile-switch-project-action #'projectile-find-dir))
+    :bind-keymap
+    ("C-c p" . projectile-command-map)
+    :init
+    (setq projectile-switch-project-action #'projectile-dired)
+    :custom (projectile-completion-system 'ivy
+
+    (projectile-register-project-type 'python-poetry '("pyproject.toml")
+				      :projectile-file "pyproject.toml"
+				      :compile "poetry install"
+				      :test "poetry run pytest"
+				      :run "poetry run python ")
+
+    (projectile-register-project-type 'gradle '("build.gradle")
+				      :project-file "build.gradle"
+				      :compile "gradle build"
+				      :test "gradle test"
+				      :run "gradle run")
+
+    (projectile-register-project-type 'cpp-meson '("meson.build")
+				      :project-file "meson.build"
+				      :compile "meson build"
+				      :test "ninja -C build test"
+				      :run "./build/main")))
+
+  (use-package counsel-projectile
+    :config (counsel-projectile-mode))
+
+#+end_src
