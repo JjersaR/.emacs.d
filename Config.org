@@ -52,8 +52,7 @@
   (setq-default default-directory "~/") ; para que dired empiece en home
 
   ;; numeros relativos
-  (display-line-numbers-mode 1)
-  (setq display-line-numbers 'relative)
+  (custom-set-variables '(display-line-numbers 'relative))
   (dolist (mode '(org-mode-hook
       term-mode-hook
       shell-mode-hook
@@ -368,7 +367,7 @@
 #+begin_src emacs-lisp :tangle ./lisp/icons.el
 
   (use-package all-the-icons)
-  (use-package all-the-icons-dired)
+  (use-package all-the-icons-dired :hook (dired-mode . all-the-icons-dired-mode))
 
 #+end_src
 

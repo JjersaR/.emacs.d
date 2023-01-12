@@ -46,8 +46,7 @@ ad-redefinition-action 'accept) ; Consejos para funciones
 (setq-default default-directory "~/") ; para que dired empiece en home
 
 ;; numeros relativos
-(display-line-numbers-mode 1)
-(setq display-line-numbers 'relative)
+(custom-set-variables '(display-line-numbers 'relative))
 (dolist (mode '(org-mode-hook
     term-mode-hook
     shell-mode-hook
