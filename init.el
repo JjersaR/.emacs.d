@@ -50,6 +50,7 @@ ad-redefinition-action 'accept) ; Consejos para funciones
 (dolist (mode '(org-mode-hook
     term-mode-hook
     shell-mode-hook
+    dired-mode-hook
     eshell-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
