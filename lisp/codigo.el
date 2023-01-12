@@ -10,13 +10,13 @@
   ("<tab>" . company-complete-selection))
   :config (setq company-idle-delay 0.0 ; quitar delay
     company-echo-delay 0 ; eliminar parpadeo
-    company-dabbrev-minimum-length 1 ; iniciar despues de escribir
     company-tooltip-align-annotations t ;alinea la anotación al lado derecho
     company-dabbrev-downcase nil)
   :hook (prog-mode-hook . company-mode-hook)
   :custom
   (company-minimum-prefix-lenght 1))
-(add-hook 'after-init-hook 'global-company-mode)
+
+(global-company-mode t)
 
 ;; una caja bonita
 (use-package company-box
