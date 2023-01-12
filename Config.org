@@ -61,18 +61,17 @@
     (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
   ;; mover archivos eliminados a la basura
-  (setq-default delete-by-moving-to-trash t
-    ;; elimine archivos de copia
-    delete-old-versions t
-    ;;sangria
-    tab-width 2
-    indent-tabs-mode nil
-    ;; borrar buffer de dired si se abre otro
-    dired-kill-when-opening-new-dired-buffer t)
+  (setq-default delete-by-moving-to-trash t)
+  ;; elimine archivos de copia
+  (setq-default delete-old-versions t)
+  ;;sangria
+  (setq-default tab-width 2)
+  (setq-default indent-tabs-mode nil)
 
   ;; configuracion de dired
   (setq dired-listing-switches "-agho --group-directories-first")
   (setq dired-dwim-target t)
+  (setq dired-kill-when-opening-new-dired-buffer t) ;; borrar buffer de dired si se abre otro
 
   ;; recolectar basura
   (add-function :after after-focus-change-function (lambda () (unless (frame-focus-state) (save-some-buffers t))))
