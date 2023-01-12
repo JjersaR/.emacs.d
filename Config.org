@@ -314,22 +314,6 @@
   "t" 'crux-visit-term-buffer)
 
   (general-define-key
-  ;; apartado de lsp
-  :prefix "C-c l"
-  "a" 'lsp-ui-sideline-apply-code-actions
-  "f" 'lsp-format-buffer
-  "d" 'lsp-find-declaration
-  "D" 'lsp-ui-peek-find-definitions
-  "k" 'lsp-find-type-definition
-  "I" 'lsp-goto-implementation
-  "o" 'lsp-describe-thing-at-point
-  "u" 'lsp-update-servers
-  "w" 'lsp-workspace-folders-add
-  "W" 'lsp-workspace-folders-remove
-  "R" 'lsp-find-references
-  "r" 'lsp-rename)
-
-  (general-define-key
   ;; apartado de lsp java
   :prefix "C-c l j"
   "p" 'lsp-java-build-project
