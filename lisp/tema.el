@@ -1,5 +1,5 @@
 (use-package catppuccin-theme :config (load-theme 'catppuccin-mocha t))
-(use-package autothemer :straight t)
+(use-package autothemer :ensure t)
 
 (setq evil-want-keybinding nil)
 

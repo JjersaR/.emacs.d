@@ -1,5 +1,5 @@
 (use-package org
-  :straight org-plus-contrib
+  :ensure org-plus-contrib
   :delight "100"
   :config (setq org-ellipsis " ▾"
 		org-hide-emphasis-markets t))
@@ -16,10 +16,6 @@
 
 (use-package visual-fill-column
   :hook (org-mode . org-mode-visual-fill))
-
-;; para presentaciones
-(use-package ox-reveal
-  :straight t)
 
 ;; Lenguajes en org-babel
 (org-babel-do-load-languages

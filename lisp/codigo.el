@@ -11,10 +11,9 @@
   :config (setq company-idle-delay 0.0 ; quitar delay
     company-echo-delay 0 ; eliminar parpadeo
     company-tooltip-align-annotations t ;alinea la anotación al lado derecho
-    company-dabbrev-downcase nil)
-  :hook (prog-mode-hook . company-mode-hook)
-  :custom
-  (company-minimum-prefix-lenght 1))
+    company-dabbrev-downcase nil
+    company-minimum-prefix-lenght 1)
+  :hook (prog-mode-hook . company-mode-hook))
 
 (global-company-mode t)
 

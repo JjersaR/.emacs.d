@@ -1,5 +1,5 @@
 (use-package ivy
-  :straight t
+  :ensure t
   :diminish
   :bind(("C-s" . swiper)
   :map ivy-minibuffer-map

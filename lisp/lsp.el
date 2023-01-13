@@ -14,8 +14,7 @@
           (lsp-signature-render-documentation nil)
           (lsp-completion-provider :company)
           (lsp-keymap-prefix "C-c l")
-  :hook ((java-mode python-mode c++-mode) . lsp-deferred)
-)
+  :hook ((java-mode python-mode c++-mode) . lsp-deferred))
 
 (use-package lsp-ui
   :after lsp-mode
@@ -37,8 +36,7 @@
   ;;IMenu
   (lsp-ui-imenu-window-width 0)
   (lsp-ui-imenu--custom-mode-line-format nil)
-  :hook (lsp-mode . lsp-ui-mode)
-)
+  :hook (lsp-mode . lsp-ui-mode))
 
 (use-package lsp-treemacs
   :ensure t

@@ -69,6 +69,9 @@
   (setq-default indent-tabs-mode nil)
 
   ;; configuracion de dired
+  (defun menosDetalle ()
+    (dired-hide-details-mode 1))
+  (add-hook 'dired-mode-hook 'menosDetalle)
   (setq dired-listing-switches "-agho --group-directories-first")
   (setq dired-dwim-target t)
   (setq dired-kill-when-opening-new-dired-buffer t) ;; borrar buffer de dired si se abre otro
@@ -150,7 +153,7 @@
 #+begin_src emacs-lisp :tangle ./lisp/tema.el
 
   (use-package catppuccin-theme :config (load-theme 'catppuccin-mocha t))
-  (use-package autothemer :straight t)
+  (use-package autothemer :ensure t)
 
 #+end_src
 
@@ -212,7 +215,7 @@
 #+begin_src emacs-lisp :tangle ./lisp/ivy.el
 
   (use-package ivy
-    :straight t
+    :ensure t
     :diminish
     :bind(("C-s" . swiper)
     :map ivy-minibuffer-map
@@ -360,7 +363,7 @@
 #+begin_src emacs-lisp :tangle ./lisp/modeline.el
 
   (use-package doom-modeline
-    :straight t
+    :ensure t
     :custom (doom-modeline-height 15))
   (doom-modeline-mode 1)
 
@@ -383,10 +386,9 @@
     :config (setq company-idle-delay 0.0 ; quitar delay
       company-echo-delay 0 ; eliminar parpadeo
       company-tooltip-align-annotations t ;alinea la anotación al lado derecho
-      company-dabbrev-downcase nil)
-    :hook (prog-mode-hook . company-mode-hook)
-    :custom
-    (company-minimum-prefix-lenght 1))
+      company-dabbrev-downcase nil
+      company-minimum-prefix-lenght 1)
+    :hook (prog-mode-hook . company-mode-hook))
 
   (global-company-mode t)
 
@@ -435,8 +437,7 @@
             (lsp-signature-render-documentation nil)
             (lsp-completion-provider :company)
             (lsp-keymap-prefix "C-c l")
-    :hook ((java-mode python-mode c++-mode) . lsp-deferred)
-  )
+    :hook ((java-mode python-mode c++-mode) . lsp-deferred))
 
   (use-package lsp-ui
     :after lsp-mode
@@ -458,8 +459,7 @@
     ;;IMenu
     (lsp-ui-imenu-window-width 0)
     (lsp-ui-imenu--custom-mode-line-format nil)
-    :hook (lsp-mode . lsp-ui-mode)
-  )
+    :hook (lsp-mode . lsp-ui-mode))
 
   (use-package lsp-treemacs
     :ensure t
@@ -478,14 +478,15 @@
 ** Java
 
 #+begin_src emacs-lisp :tangle ./lisp/java.el
+
   ;; para comandos
   (use-package eglot-java)
 
   ;; para servidor
   (use-package lsp-java
     :defer t
-    :after lsp-mode
-  )
+    :after lsp-mode)
+
 #+end_src
 
 ** C++
@@ -519,7 +520,7 @@
 #+begin_src emacs-lisp :tangle ./lisp/org.el
 
   (use-package org
-    :straight org-plus-contrib
+    :ensure org-plus-contrib
     :delight "100"
     :config (setq org-ellipsis " ▾"
 		  org-hide-emphasis-markets t))
@@ -536,10 +537,6 @@
 
   (use-package visual-fill-column
     :hook (org-mode . org-mode-visual-fill))
-
-  ;; para presentaciones
-  (use-package ox-reveal
-    :straight t)
 
   ;; Lenguajes en org-babel
   (org-babel-do-load-languages
