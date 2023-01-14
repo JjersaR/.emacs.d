@@ -4,3 +4,5 @@
 
 (use-package meson-mode)
 (add-hook 'meson-mode-hook 'company-mode)
+
+(use-package cpp-auto-include :hook (c++-mode . cpp-auto-include))

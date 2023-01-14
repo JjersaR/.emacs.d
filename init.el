@@ -46,14 +46,7 @@ ad-redefinition-action 'accept) ; Consejos para funciones
 (setq-default default-directory "~/") ; para que dired empiece en home
 
 ;; numeros relativos
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(display-line-numbers 'relative)
- '(package-selected-packages
-   '(yasnippet-snippets which-key visual-fill-column use-package undo-fu treemacs-evil rainbow-delimiters quickrun poetry phi-autopair org-plus-contrib org-modern org-auto-tangle modern-cpp-font-lock meson-mode lsp-ui lsp-pyright lsp-java lsp-ivy ivy-rich ibuffer-vc helpful general format-all forge flycheck evil-nerd-commenter evil-collection eglot-java doom-modeline dired-toggle crux counsel-projectile company-box catppuccin-theme autothemer auto-package-update all-the-icons-dired)))
+(custom-set-variables '(display-line-numbers 'relative))
 (dolist (mode '(org-mode-hook
     term-mode-hook
     shell-mode-hook
@@ -125,10 +118,3 @@ ad-redefinition-action 'accept) ; Consejos para funciones
     (mapc load-it (directory-files dir nil "\\.el$"))))
 
 (load-directory "~/.emacs.d/lisp") ; cargar la configuracion de...
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
-(put 'dired-find-alternate-file 'disabled nil)
