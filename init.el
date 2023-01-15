@@ -118,3 +118,4 @@ ad-redefinition-action 'accept) ; Consejos para funciones
     (mapc load-it (directory-files dir nil "\\.el$"))))
 
 (load-directory "~/.emacs.d/lisp") ; cargar la configuracion de...
+(put 'dired-find-alternate-file 'disabled nil)
