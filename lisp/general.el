@@ -10,8 +10,7 @@
 "D" 'crux-delete-file-and-buffer
 "c" 'crux-copy-file-preserve-attributes
 "k" 'crux-kill-other-buffers
-"o" 'crux-other-window-or-switch-buffer
-"t" 'crux-visit-term-buffer)
+"o" 'crux-other-window-or-switch-buffer)
 
 (general-define-key
 ;; apartado de lsp java
@@ -30,3 +29,10 @@
 "c" 'lsp-java-extract-to-constant
 "M" 'lsp-java-extract-method
 "v" 'lsp-java-extract-to-local-variable)
+
+(general-define-key
+;; movernos entre ventanas
+"C-<left>" 'windmove-left
+"C-<right>" 'windmove-right
+"C-<up>" 'windmove-up
+"C-<down>" 'windmove-down)
