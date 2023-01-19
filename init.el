@@ -19,7 +19,7 @@ user-mail-address "rikisj5649@gmail.com")
 (fset 'yes-or-no-p 'y-or-n-p)
 
 ;; brillo
-(set-frame-parameter nil 'alpha 95)
+(set-frame-parameter (selected-frame) 'alpha '(95 . 50))
 
 ;; quitar *.el~ y bloqueo de archivos
 (setq backup-inhibited t
@@ -75,6 +75,8 @@ ad-redefinition-action 'accept) ; Consejos para funciones
 
 ;; eliminar espacios en blanco
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
+;; para los temas
+(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -118,4 +120,3 @@ ad-redefinition-action 'accept) ; Consejos para funciones
     (mapc load-it (directory-files dir nil "\\.el$"))))
 
 (load-directory "~/.emacs.d/lisp") ; cargar la configuracion de...
-(put 'dired-find-alternate-file 'disabled nil)

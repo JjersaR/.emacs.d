@@ -28,7 +28,7 @@ iniciando servidor cada que se abre Emacs, agregando numeros relativos y conf de
   (fset 'yes-or-no-p 'y-or-n-p)
 
   ;; brillo
-  (set-frame-parameter nil 'alpha 95)
+  (set-frame-parameter (selected-frame) 'alpha '(95 . 50))
 
   ;; quitar *.el~ y bloqueo de archivos
   (setq backup-inhibited t
@@ -84,6 +84,8 @@ iniciando servidor cada que se abre Emacs, agregando numeros relativos y conf de
 
   ;; eliminar espacios en blanco
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
+  ;; para los temas
+  (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
 
 #+end_src
 
@@ -224,12 +226,16 @@ Conjunto de utiles accesos.
     :ensure t
     :bind (("C-'"   . popper-toggle-latest)
            ("M-'"   . popper-cycle)
-           ("M-t"   . popper-kill-latest-popup)
+           ("C-x M-~" . popper-kill-latest-popup)
            ("C-M-'" . popper-toggle-type))
     :init
     (setq popper-reference-buffers
           '("\\*Messages\\*"
             "Output\\*$"
+            "\\*Warnings\\*"
+            "\\*xref\\*"
+            "*Flymake diagnostics.*"
+            "\\*compilation\\*"
             "\\*Async Shell Command\\*"
             help-mode
             compilation-mode))

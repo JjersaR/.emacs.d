@@ -2,12 +2,16 @@
   :ensure t
   :bind (("C-'"   . popper-toggle-latest)
          ("M-'"   . popper-cycle)
-         ("M-t"   . popper-kill-latest-popup)
+         ("C-x M-~" . popper-kill-latest-popup)
          ("C-M-'" . popper-toggle-type))
   :init
   (setq popper-reference-buffers
         '("\\*Messages\\*"
           "Output\\*$"
+          "\\*Warnings\\*"
+          "\\*xref\\*"
+          "*Flymake diagnostics.*"
+          "\\*compilation\\*"
           "\\*Async Shell Command\\*"
           help-mode
           compilation-mode))
